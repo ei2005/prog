@@ -18,7 +18,7 @@ using namespace std;
 #define P pair<int,int>
 #define mk(a,b) make_pair(a,b)
 
-typedef struct{
+typedef struct{//箱の原物
     string s;
     int n;
     bool flag=false;
@@ -36,6 +36,25 @@ typedef struct{
         }
     }
 }boxs;
+
+
+bool isnum(string s,int m){//入力が数字かどうかそして合っているか
+    if(s.size()>=3) return false;
+    else if(s.size()==2){
+        if(s[0]<='0' || '0'+(m/10)<s[0]) return false;
+        else if(s[0]=='0'+(m/10) && '0'+(m%10)<=s[1]) return false;
+    }
+    else{
+        if(s[0]<'0' || '0'+m<=s[0]) return false;
+    }
+
+    return true;
+}
+
+int chanstr(string s){//stringを数字に変換
+    if(s.size()==2) return (s[0]-'0')*10+(s[1]-'0');
+    else return (s[0]-'0');
+}
 
 int main(){
     cin.tie(nullptr);
@@ -55,21 +74,28 @@ int main(){
     printf("\n全ての文字を綺麗に並べ替えることができたらクリア！\n");
     printf("もし、行き詰まったり変なエラーが起こったりしたら申し訳ないけどCtrl+Cを...\n");
     printf("\n詳しくはスマホゲーム「Ball Sort Puzzle」をやってみてね！\n");
-    
-    sleep(5);
 
+
+    //ーーーーーレベル入力ーーーーー
     printf("\nchoose level\n");
     printf("0 1 2 3 4\n");
+    string s;
+
     j1:;
-    int k; cin>>k;
-    if(k<0 || 4<k){
+    cin>>s;
+    int k;
+    if(!isnum(s,5)){
         cout<<"その数字は使えません\n"<<flush;
         goto j1;
     }
 
-    int m;//要素数
-    int x[]={7,9,11,14,14};//要素数配列
+    sleep(1);
 
+    //ーーーーー箱(ゲーム)の生成ーーーーー
+    int m;//要素数
+    int x[]={7,9,11,14,14};//要素数配列 
+
+    k=chanstr(s);
     m=x[k];
     boxs box[m];//箱のすべて
 
@@ -138,9 +164,12 @@ int main(){
     rep(i,0,m-1){
         box[i].update();
     }
-    
-    while(1){
 
+
+    //ーーーーーゲーム開始ーーーーー
+    while(1){
+        
+        //-----状況判定-----
         bool goal=true;
         rep(i,0,m-1){
             if(!box[i].flag) goal=false;
@@ -148,45 +177,61 @@ int main(){
 
         if(goal){
             cout<<"クリア！\n"<<flush;
+            sleep(1);
             break;
         }
 
-        cout<<"中身"<<"\n"<<flush;
+
+        //-----箱の表示-----
+        cout<<"\n-------------------------------------------\n";
+        cout<<"中身"<<"\n";
         rep(i,0,m-1){
             cout<<"箱 ";
             if(i<10) cout<<" ";
             cout<<i<<" ";
-            cout<<box[i].s<<"\n"<<flush;
+            cout<<box[i].s<<"\n";
         }
         cout<<"\n"<<flush;
 
+
+        //-----入力ステップ-----
         printf("入れ替え元と入れ替え先を入力 箱の数字を入力\n");
+        printf("もし、途中でやめたい場合は\"exit\"を入力してね\n");
         
-        s1:;
+        s1:;//入れ替え元入力
         cout<<"入れ替え元="<<flush;
-        int from; cin>>from;
-        if(iscntrl(from)){
-            from=-1;
+        cin>>s; sleep(1);
+        int from;
+        if(s=="exit"){
+            cout<<"中断"<<"\n"<<flush;
+            sleep(1);
+            return 0;
         }
-        if(from<0 || m<=from){
-            from=0;
+        if(!isnum(s,m)){
             cout<<"その数字は使えません\n"<<flush;
+            sleep(1); cout<<"\n";
             goto s1;
         }
+        from=chanstr(s);
 
-        s2:;
+        s2:;//入れ替え先入力
         cout<<"入れ替え先="<<flush;
-        int to; cin>>to;
-        if(iscntrl(to)){
-            to=-1;
+        cin>>s; sleep(1);
+        int to;
+        if(s=="exit"){
+            cout<<"中断"<<"\n"<<flush;
+            sleep(1);
+            return 0;
         }
-        if(to<0 || m<=to ||){
-            to=-1;
+        if(!isnum(s,m)){
             cout<<"その数字は使えません\n"<<flush;
+            sleep(1); cout<<"\n";
             goto s2;
         }
+        to=chanstr(s);
 
-        //例外処理
+
+        //-----例外処理-----
         if(to==from){
             cout<<"それはできません\n"<<flush;
             goto s1;
@@ -196,6 +241,8 @@ int main(){
             goto s1;
         }
 
+
+        //-----処理,実行-----
         char from_ch=box[from].s[box[from].n-1];
         if(box[to].n==0){
             box[from].s.pop_back();
@@ -213,8 +260,11 @@ int main(){
             }
         }
 
+
+        //-----状況の更新-----
         box[from].update();
         box[to].update();
+        
     }
 
     return 0;
