@@ -1,0 +1,55 @@
+body{
+    font-family: "Avenir Next";
+    background-color: rgb(180, 180, 245);
+}
+
+p{
+    color:rgb(245, 217, 240);
+    padding-bottom: 1px;
+}
+
+
+.header{
+    background-color: black;
+    color: rgb(202, 48, 48);
+    height: 60px;
+    font-size: 36px;
+    padding: 20px 40px;
+}
+
+.main{
+    background-image: url(./spr.png);
+    background-size: cover;
+    height: 800px
+}
+
+.contents-title{
+    border-bottom: 2px solid #dee7ec;
+    font-size: 28px;
+    color: white;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.contents-text{
+    font-size: 20px;
+    color: white;
+}
+
+hr {
+    border: none;
+    border-top: 3px double rgb(4, 0, 255);
+    color: rgb(255, 255, 255);
+    overflow: visible;
+    text-align: center;
+    height: 5px;
+}
+  
+hr:after {
+    display: block;
+    content: '§';
+    padding: 0 4px;
+    position: relative;
+    top: -13px;
+    transform: rotate(40deg)
+}
